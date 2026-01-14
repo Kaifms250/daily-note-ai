@@ -10,9 +10,10 @@ interface NotesListProps {
   onEdit: (note: Note) => void;
   onDelete: (id: string) => void;
   onSummarize: (note: Note) => void;
+  onToggleComplete: (id: string, completed: boolean) => void;
 }
 
-export function NotesList({ notes, isLoading, onEdit, onDelete, onSummarize }: NotesListProps) {
+export function NotesList({ notes, isLoading, onEdit, onDelete, onSummarize, onToggleComplete }: NotesListProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredNotes = useMemo(() => {
@@ -86,6 +87,7 @@ export function NotesList({ notes, isLoading, onEdit, onDelete, onSummarize }: N
               onEdit={onEdit}
               onDelete={onDelete}
               onSummarize={onSummarize}
+              onToggleComplete={onToggleComplete}
             />
           ))}
         </div>

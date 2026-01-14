@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       notes: {
         Row: {
+          completed: boolean
           content: string
           created_at: string
           id: string
@@ -23,6 +24,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          completed?: boolean
           content: string
           created_at?: string
           id?: string
@@ -30,6 +32,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          completed?: boolean
           content?: string
           created_at?: string
           id?: string

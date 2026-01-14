@@ -75,7 +75,7 @@ export function AIAssistant({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="sm:max-w-[500px] h-[600px] flex flex-col p-0 gap-0">
+      <DialogContent className="sm:max-w-[500px] h-[600px] flex flex-col p-0 gap-0 [&>button]:hidden">
         <DialogHeader className="p-4 pb-3 border-b border-border">
           <div className="flex items-center justify-between">
             <DialogTitle className="flex items-center gap-2 font-display">

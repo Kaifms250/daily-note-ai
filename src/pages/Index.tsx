@@ -4,10 +4,14 @@ import { Sparkles, BookOpen } from "lucide-react";
 import { NoteForm } from "@/components/NoteForm";
 import { NotesList } from "@/components/NotesList";
 import { AIAssistant } from "@/components/AIAssistant";
+import { DateTimeDisplay } from "@/components/DateTimeDisplay";
+import { MotivationalQuote } from "@/components/MotivationalQuote";
+import { TimeRemaining } from "@/components/TimeRemaining";
+import { ProgressTracker } from "@/components/ProgressTracker";
 import { useNotes, type Note } from "@/hooks/useNotes";
 
 const Index = () => {
-  const { notes, isLoading, createNote, updateNote, deleteNote } = useNotes();
+  const { notes, isLoading, createNote, updateNote, deleteNote, toggleComplete } = useNotes();
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   
   // AI Assistant state
@@ -35,6 +39,10 @@ const Index = () => {
     if (editingNote?.id === id) {
       setEditingNote(null);
     }
+  };
+
+  const handleToggleComplete = async (id: string, completed: boolean) => {
+    await toggleComplete(id, completed);
   };
 
   const handleSummarize = (note: Note) => {
@@ -72,13 +80,16 @@ const Index = () => {
                 Daily Activity Notes
               </h1>
             </div>
-            <Button
-              onClick={openAIChat}
-              className="btn-primary-gradient shadow-soft"
-            >
-              <Sparkles className="h-4 w-4 mr-2" />
-              AI Assistant
-            </Button>
+            <div className="flex items-center gap-4">
+              <DateTimeDisplay />
+              <Button
+                onClick={openAIChat}
+                className="btn-primary-gradient shadow-soft"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                AI Assistant
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -86,18 +97,29 @@ const Index = () => {
       {/* Main Content */}
       <main className="container max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid lg:grid-cols-[400px,1fr] gap-8">
-          {/* Left: Note Form */}
-          <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="card-elevated p-6">
-              <h2 className="font-display text-xl font-semibold text-foreground mb-4">
-                {editingNote ? "Edit Note" : "Create Note"}
-              </h2>
-              <NoteForm
-                editingNote={editingNote}
-                onSave={handleSave}
-                onCancel={() => setEditingNote(null)}
-                onAIImprove={handleAIImprove}
-              />
+          {/* Left: Note Form + Widgets */}
+          <aside className="space-y-6">
+            <div className="lg:sticky lg:top-24 lg:self-start space-y-6">
+              <div className="card-elevated p-6">
+                <h2 className="font-display text-xl font-semibold text-foreground mb-4">
+                  {editingNote ? "Edit Note" : "Create Note"}
+                </h2>
+                <NoteForm
+                  editingNote={editingNote}
+                  onSave={handleSave}
+                  onCancel={() => setEditingNote(null)}
+                  onAIImprove={handleAIImprove}
+                />
+              </div>
+
+              {/* Motivational Quote */}
+              <MotivationalQuote />
+
+              {/* Time Remaining */}
+              <TimeRemaining />
+
+              {/* Progress Tracker */}
+              <ProgressTracker notes={notes} />
             </div>
           </aside>
 
@@ -117,6 +139,7 @@ const Index = () => {
               onEdit={handleEdit}
               onDelete={handleDelete}
               onSummarize={handleSummarize}
+              onToggleComplete={handleToggleComplete}
             />
           </section>
         </div>

@@ -8,6 +8,7 @@ export interface Note {
   content: string;
   created_at: string;
   updated_at: string;
+  completed: boolean;
 }
 
 export function useNotes() {
@@ -93,6 +94,36 @@ export function useNotes() {
     }
   };
 
+  const toggleComplete = async (id: string, completed: boolean) => {
+    try {
+      const { data, error } = await supabase
+        .from("notes")
+        .update({ completed })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setNotes((prev) =>
+        prev.map((note) => (note.id === id ? data : note))
+      );
+      toast({
+        title: completed ? "Task completed" : "Task marked as pending",
+        description: completed ? "Great job! Keep it up! 🎉" : "Task moved back to pending.",
+      });
+      return data;
+    } catch (error) {
+      console.error("Error toggling completion:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update task status. Please try again.",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
+
   const deleteNote = async (id: string) => {
     try {
       const { error } = await supabase.from("notes").delete().eq("id", id);
@@ -159,6 +190,7 @@ export function useNotes() {
     createNote,
     updateNote,
     deleteNote,
+    toggleComplete,
     refetch: fetchNotes,
   };
 }
