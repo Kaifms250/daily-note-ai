@@ -37,11 +37,11 @@ export function useNotes() {
     }
   };
 
-  const createNote = async (title: string, content: string) => {
+  const createNote = async (title: string, content: string, userId: string) => {
     try {
       const { data, error } = await supabase
         .from("notes")
-        .insert({ title, content })
+        .insert({ title, content, user_id: userId })
         .select()
         .single();
 

@@ -22,6 +22,7 @@ export type Database = {
           id: string
           title: string
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           completed?: boolean
@@ -30,6 +31,7 @@ export type Database = {
           id?: string
           title: string
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           completed?: boolean
@@ -37,6 +39,31 @@ export type Database = {
           created_at?: string
           id?: string
           title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
           updated_at?: string
         }
         Relationships: []
