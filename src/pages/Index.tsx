@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Sparkles, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen, LogOut, Loader2 } from "lucide-react";
 import { NoteForm } from "@/components/NoteForm";
 import { NotesList } from "@/components/NotesList";
 import { AIAssistant } from "@/components/AIAssistant";
@@ -9,9 +10,14 @@ import { MotivationalQuote } from "@/components/MotivationalQuote";
 import { TimeRemaining } from "@/components/TimeRemaining";
 import { ProgressTracker } from "@/components/ProgressTracker";
 import { useNotes, type Note } from "@/hooks/useNotes";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
   const { notes, isLoading, createNote, updateNote, deleteNote, toggleComplete } = useNotes();
+  const { user, isLoading: authLoading, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   
   // AI Assistant state
@@ -20,12 +26,21 @@ const Index = () => {
   const [aiNoteContent, setAiNoteContent] = useState<string | undefined>();
   const [aiAction, setAiAction] = useState<"summarize" | "rewrite" | "improve" | "chat">("chat");
 
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth", { replace: true });
+    }
+  }, [user, authLoading, navigate]);
+
   const handleSave = async (title: string, content: string) => {
+    if (!user) return;
+    
     if (editingNote) {
       await updateNote(editingNote.id, title, content);
       setEditingNote(null);
     } else {
-      await createNote(title, content);
+      await createNote(title, content, user.id);
     }
   };
 
@@ -66,6 +81,31 @@ const Index = () => {
     setIsAIOpen(true);
   };
 
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    } else {
+      navigate("/auth", { replace: true });
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -80,7 +120,7 @@ const Index = () => {
                 Daily Activity Notes
               </h1>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <DateTimeDisplay />
               <Button
                 onClick={openAIChat}
@@ -88,6 +128,14 @@ const Index = () => {
               >
                 <Sparkles className="h-4 w-4 mr-2" />
                 AI Assistant
+              </Button>
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                size="icon"
+                title="Sign out"
+              >
+                <LogOut className="h-4 w-4" />
               </Button>
             </div>
           </div>
