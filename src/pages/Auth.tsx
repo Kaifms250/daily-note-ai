@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BookOpen, Mail, Lock, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Swords, Mail, Lock, Loader2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,13 +34,9 @@ const Auth = () => {
 
   const form = useForm<AuthFormData>({
     resolver: zodResolver(authSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
-  // Redirect if already logged in
   useEffect(() => {
     if (!isLoading && user) {
       navigate("/", { replace: true });
@@ -52,47 +49,29 @@ const Auth = () => {
       if (isLogin) {
         const { error } = await signIn(data.email, data.password);
         if (error) {
-          if (error.message.includes("Invalid login credentials")) {
-            toast({
-              title: "Login failed",
-              description: "Invalid email or password. Please try again.",
-              variant: "destructive",
-            });
-          } else {
-            toast({
-              title: "Login failed",
-              description: error.message,
-              variant: "destructive",
-            });
-          }
+          toast({
+            title: "Login failed",
+            description: error.message.includes("Invalid login credentials")
+              ? "Invalid email or password."
+              : error.message,
+            variant: "destructive",
+          });
           return;
         }
-        toast({
-          title: "Welcome back!",
-          description: "You have successfully logged in.",
-        });
+        toast({ title: "Welcome back, warrior! ⚔️" });
       } else {
         const { error } = await signUp(data.email, data.password);
         if (error) {
-          if (error.message.includes("User already registered")) {
-            toast({
-              title: "Account exists",
-              description: "This email is already registered. Please log in instead.",
-              variant: "destructive",
-            });
-          } else {
-            toast({
-              title: "Sign up failed",
-              description: error.message,
-              variant: "destructive",
-            });
-          }
+          toast({
+            title: "Sign up failed",
+            description: error.message.includes("User already registered")
+              ? "This email is already registered."
+              : error.message,
+            variant: "destructive",
+          });
           return;
         }
-        toast({
-          title: "Account created!",
-          description: "Welcome to Daily Activity Notes.",
-        });
+        toast({ title: "Account created! Begin your quest. 🎮" });
       }
     } finally {
       setIsSubmitting(false);
@@ -108,23 +87,34 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="card-elevated p-8">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Ambient effects */}
+      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-neon-blue/5 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-neon-purple/5 rounded-full blur-[150px]" />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md relative z-10"
+      >
+        <div className="glass-card p-8 border-primary/10">
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <div className="p-3 rounded-xl bg-primary/10 mb-4">
-              <BookOpen className="h-8 w-8 text-primary" />
-            </div>
-            <h1 className="font-display text-2xl font-semibold text-foreground">
-              Daily Activity Notes
+            <motion.div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
+              style={{ background: 'var(--gradient-primary)' }}
+              whileHover={{ scale: 1.05, rotate: 5 }}
+            >
+              <Swords className="h-8 w-8 text-primary-foreground" />
+            </motion.div>
+            <h1 className="font-display text-2xl font-bold tracking-wider text-gradient-primary">
+              QUESTFLOW
             </h1>
-            <p className="text-muted-foreground mt-2">
-              {isLogin ? "Welcome back!" : "Create your account"}
+            <p className="text-sm text-muted-foreground mt-2">
+              {isLogin ? "Resume your quest" : "Begin your journey"}
             </p>
           </div>
 
-          {/* Form */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -132,16 +122,11 @@ const Auth = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground">Email</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="email"
-                          placeholder="you@example.com"
-                          className="pl-10"
-                          {...field}
-                        />
+                        <Input type="email" placeholder="warrior@quest.io" className="pl-10 input-dark" {...field} />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -154,16 +139,11 @@ const Auth = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-xs uppercase tracking-wider text-muted-foreground">Password</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          className="pl-10"
-                          {...field}
-                        />
+                        <Input type="password" placeholder="••••••••" className="pl-10 input-dark" {...field} />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -171,35 +151,28 @@ const Auth = () => {
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full btn-primary-gradient"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full btn-neon" disabled={isSubmitting}>
                 {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                {isLogin ? "Log In" : "Sign Up"}
+                <Zap className="h-4 w-4 mr-1" />
+                {isLogin ? "Enter the Arena" : "Create Character"}
               </Button>
             </form>
           </Form>
 
-          {/* Toggle */}
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+              {isLogin ? "New warrior?" : "Already have an account?"}{" "}
               <button
                 type="button"
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  form.reset();
-                }}
+                onClick={() => { setIsLogin(!isLogin); form.reset(); }}
                 className="text-primary hover:underline font-medium"
               >
-                {isLogin ? "Sign up" : "Log in"}
+                {isLogin ? "Create account" : "Log in"}
               </button>
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
