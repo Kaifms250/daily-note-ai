@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          badge_icon: string
+          badge_name: string
+          description: string | null
+          earned_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_icon: string
+          badge_name: string
+          description?: string | null
+          earned_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_icon?: string
+          badge_name?: string
+          description?: string | null
+          earned_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notes: {
         Row: {
           completed: boolean
@@ -65,6 +92,93 @@ export type Database = {
           email?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          priority: string | null
+          scheduled_time: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+          xp_reward: number | null
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          priority?: string | null
+          scheduled_time?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+          xp_reward?: number | null
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          priority?: string | null
+          scheduled_time?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+          xp_reward?: number | null
+        }
+        Relationships: []
+      }
+      user_progress: {
+        Row: {
+          created_at: string | null
+          current_streak: number | null
+          id: string
+          last_active_date: string | null
+          level: number | null
+          longest_streak: number | null
+          tasks_completed_today: number | null
+          total_tasks_completed: number | null
+          updated_at: string | null
+          user_id: string
+          xp: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_streak?: number | null
+          id?: string
+          last_active_date?: string | null
+          level?: number | null
+          longest_streak?: number | null
+          tasks_completed_today?: number | null
+          total_tasks_completed?: number | null
+          updated_at?: string | null
+          user_id: string
+          xp?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          current_streak?: number | null
+          id?: string
+          last_active_date?: string | null
+          level?: number | null
+          longest_streak?: number | null
+          tasks_completed_today?: number | null
+          total_tasks_completed?: number | null
+          updated_at?: string | null
+          user_id?: string
+          xp?: number | null
         }
         Relationships: []
       }
