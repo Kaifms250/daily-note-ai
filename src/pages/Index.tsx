@@ -47,6 +47,8 @@ const Index = () => {
     const result = await completeTask(taskId);
     if (result) {
       const xpResult = await addXP(task.xp_reward);
+      setCelebrationTrigger(true);
+      setTimeout(() => setCelebrationTrigger(false), 100);
       toast({
         title: `⚡ +${task.xp_reward} XP`,
         description: xpResult?.leveledUp
