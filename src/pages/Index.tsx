@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { LogOut, Loader2, Plus, Swords } from "lucide-react";
+import { LogOut, Loader2, Plus, Swords, BarChart3, User } from "lucide-react";
 import { XPBar } from "@/components/XPBar";
 import { Timeline } from "@/components/Timeline";
 import { TaskDetailPanel } from "@/components/TaskDetailPanel";
@@ -13,6 +13,9 @@ import { QuickMotivation } from "@/components/QuickMotivation";
 import { WeekProgress } from "@/components/WeekProgress";
 import { AICoach } from "@/components/AICoach";
 import { DateTimeDisplay } from "@/components/DateTimeDisplay";
+import { SmartNudge } from "@/components/SmartNudge";
+import { CelebrationOverlay } from "@/components/CelebrationOverlay";
+import { NavBar } from "@/components/NavBar";
 import { useTasks, type Task } from "@/hooks/useTasks";
 import { useGameProgress } from "@/hooks/useGameProgress";
 import { useAuth } from "@/hooks/useAuth";
@@ -29,6 +32,7 @@ const Index = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [addHour, setAddHour] = useState<number | undefined>();
   const [isAIOpen, setIsAIOpen] = useState(false);
+  const [celebrationTrigger, setCelebrationTrigger] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -43,6 +47,8 @@ const Index = () => {
     const result = await completeTask(taskId);
     if (result) {
       const xpResult = await addXP(task.xp_reward);
+      setCelebrationTrigger(true);
+      setTimeout(() => setCelebrationTrigger(false), 100);
       toast({
         title: `⚡ +${task.xp_reward} XP`,
         description: xpResult?.leveledUp
@@ -107,6 +113,12 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-3">
               <DateTimeDisplay />
+              <Button variant="ghost" size="icon" onClick={() => navigate("/analytics")} title="Analytics" className="text-muted-foreground hover:text-foreground hidden md:flex">
+                <BarChart3 className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => navigate("/profile")} title="Profile" className="text-muted-foreground hover:text-foreground hidden md:flex">
+                <User className="h-4 w-4" />
+              </Button>
               <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign out" className="text-muted-foreground hover:text-foreground">
                 <LogOut className="h-4 w-4" />
               </Button>
@@ -189,8 +201,17 @@ const Index = () => {
         defaultHour={addHour}
       />
 
+      {/* Celebration */}
+      <CelebrationOverlay trigger={celebrationTrigger} />
+
+      {/* Smart Nudges */}
+      <SmartNudge tasks={tasks} />
+
       {/* AI Coach */}
       <AICoach isOpen={isAIOpen} onToggle={() => setIsAIOpen(!isAIOpen)} />
+
+      {/* Mobile Nav */}
+      <NavBar />
     </div>
   );
 };
