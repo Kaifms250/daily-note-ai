@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { LogOut, Loader2, Plus, Swords } from "lucide-react";
+import { LogOut, Loader2, Plus, Swords, BarChart3, User } from "lucide-react";
 import { XPBar } from "@/components/XPBar";
 import { Timeline } from "@/components/Timeline";
 import { TaskDetailPanel } from "@/components/TaskDetailPanel";
