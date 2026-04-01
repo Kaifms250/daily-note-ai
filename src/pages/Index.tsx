@@ -113,6 +113,12 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-3">
               <DateTimeDisplay />
+              <Button variant="ghost" size="icon" onClick={() => navigate("/analytics")} title="Analytics" className="text-muted-foreground hover:text-foreground hidden md:flex">
+                <BarChart3 className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => navigate("/profile")} title="Profile" className="text-muted-foreground hover:text-foreground hidden md:flex">
+                <User className="h-4 w-4" />
+              </Button>
               <Button variant="ghost" size="icon" onClick={handleSignOut} title="Sign out" className="text-muted-foreground hover:text-foreground">
                 <LogOut className="h-4 w-4" />
               </Button>
