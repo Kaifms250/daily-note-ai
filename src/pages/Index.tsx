@@ -32,6 +32,7 @@ const Index = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [addHour, setAddHour] = useState<number | undefined>();
   const [isAIOpen, setIsAIOpen] = useState(false);
+  const [celebrationTrigger, setCelebrationTrigger] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
