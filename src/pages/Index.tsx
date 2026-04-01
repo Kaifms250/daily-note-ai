@@ -201,8 +201,17 @@ const Index = () => {
         defaultHour={addHour}
       />
 
+      {/* Celebration */}
+      <CelebrationOverlay trigger={celebrationTrigger} />
+
+      {/* Smart Nudges */}
+      <SmartNudge tasks={tasks} />
+
       {/* AI Coach */}
       <AICoach isOpen={isAIOpen} onToggle={() => setIsAIOpen(!isAIOpen)} />
+
+      {/* Mobile Nav */}
+      <NavBar />
     </div>
   );
 };
