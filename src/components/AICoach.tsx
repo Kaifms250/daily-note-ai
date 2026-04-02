@@ -85,7 +85,7 @@ export function AICoach({ isOpen, onToggle }: AICoachProps) {
                   <Bot className="h-10 w-10 text-muted-foreground/30 mx-auto mb-2" />
                   <p className="text-sm text-muted-foreground">Ask me anything about productivity</p>
                   <div className="mt-3 space-y-1.5">
-                    {["Optimize my schedule", "How to stay focused?", "Summarize my progress"].map((s) => (
+                    {["Why didn't I complete tasks?", "Optimize my day", "How to stay focused?", "Summarize my progress"].map((s) => (
                       <button
                         key={s}
                         onClick={() => sendMessage(s)}
